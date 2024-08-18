@@ -2,31 +2,43 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>رقم عشوائي سريع باستخدام وقت GitHub</title>
+    <title>رقم عشوائي موحد</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: 10vw;
+            font-weight: bold;
+        }
+    </style>
 </head>
-<body style="display:flex;justify-content:center;align-items:center;height:100vh;margin:0;font-size:10vw;font-weight:bold">
-<div id="randomNumber">جاري التحميل...</div>
-<script>
-(function() {
-    function generateNumber(timestamp) {
-        var fiveMinuteInterval = Math.floor(timestamp / 300000);
-        return ((fiveMinuteInterval * 15485863) % 90000 + 10000).toString().padStart(5, '0');
-    }
+<body>
+    <div id="randomNumber">...جاري التحميل</div>
+    <script>
+        (function() {
+            var startTime = Date.now();
+            var currentNumber;
 
-    function updateNumber() {
-        fetch('https://api.github.com/').then(function(response) {
-            var date = new Date(response.headers.get('date'));
-            document.getElementById("randomNumber").textContent = generateNumber(date.getTime());
-        }).catch(function(error) {
-            console.error('خطأ:', error);
-            // استخدام الوقت المحلي كحل احتياطي
-            document.getElementById("randomNumber").textContent = generateNumber(Date.now());
-        });
-    }
+            function generateNumber() {
+                var interval = Math.floor((Date.now() - startTime) / 300000);
+                return ((interval * 15485863) % 90000 + 10000).toString().padStart(5, '0');
+            }
 
-    updateNumber();
-    setInterval(updateNumber, 60000); // تحديث كل دقيقة
-})();
-</script>
+            function updateNumber() {
+                var newNumber = generateNumber();
+                if (newNumber !== currentNumber) {
+                    currentNumber = newNumber;
+                    document.getElementById("randomNumber").textContent = currentNumber;
+                }
+            }
+
+            updateNumber();
+            setInterval(updateNumber, 1000);
+        })();
+    </script>
 </body>
 </html>
