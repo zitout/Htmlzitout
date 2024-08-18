@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 </head>
 <body>
-<pre id="n"></pre>
+<pre id="n">00000</pre>
 <script>
 var r = new Date('2024-01-01').getTime();
 var FIVE_MINUTES = 5 * 60 * 1000;
@@ -19,12 +19,10 @@ function generateNumber() {
 function updateNumber() {
     var number = generateNumber();
     document.getElementById('n').textContent = number;
+    document.title = number; // إضافة الرقم إلى عنوان الصفحة
 }
 
-// Update the number once when the page loads
 updateNumber();
-
-// Optionally, continue updating every second
 setInterval(updateNumber, 1000);
 </script>
 </body>
