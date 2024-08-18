@@ -6,28 +6,31 @@
     <style>
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+        }
+        #randomNumber {
             font-size: 10vw;
             font-weight: bold;
         }
-        #status {
-            position: fixed;
-            top: 10px;
+        #status, #debug {
             font-size: 16px;
             color: #666;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="randomNumber"></div>
+    <div id="randomNumber">...جاري التحميل</div>
     <div id="status"></div>
+    <div id="debug"></div>
     <script>
         const FIVE_MINUTES = 5 * 60 * 1000;
-        let initialTime;
+        const REFERENCE_DATE = new Date('2024-01-01T00:00:00Z').getTime();
 
         async function fetchServerTime() {
             try {
@@ -40,49 +43,29 @@
             }
         }
 
-        function shouldUpdateTime() {
-            if (!initialTime) return true;
-            const now = new Date();
-            return now.getUTCDate() === 1 && now.getUTCHours() === 0 && now.getUTCMinutes() < 5;
-        }
-
         function generateNumber(seed) {
-            // استخدام خوارزمية Park-Miller PRNG
             let state = seed % 2147483647;
             if (state <= 0) state += 2147483646;
-
             for (let i = 0; i < 10; i++) {
                 state = (state * 16807) % 2147483647;
             }
-
-            // توليد رقم بين 10000 و 99999
             return 10000 + (state % 90000);
         }
 
-        async function updateNumber(forceUpdate = false) {
-            if (shouldUpdateTime() || forceUpdate) {
-                document.getElementById("status").textContent = "جاري المزامنة...";
-                initialTime = await fetchServerTime();
-                localStorage.setItem('lastUpdateTime', initialTime.getTime());
-                document.getElementById("status").textContent = "";
-            }
-
-            const now = Date.now();
-            const interval = Math.floor((now - initialTime) / FIVE_MINUTES);
+        async function updateNumber() {
+            const serverTime = await fetchServerTime();
+            const timeDiff = serverTime.getTime() - REFERENCE_DATE;
+            const interval = Math.floor(timeDiff / FIVE_MINUTES);
             const number = generateNumber(interval).toString().padStart(5, '0');
             document.getElementById("randomNumber").textContent = number;
+
+            // معلومات التصحيح
+            const debug = `وقت الخادم: ${serverTime.toISOString()}, فاصل: ${interval}`;
+            document.getElementById("debug").textContent = debug;
         }
 
-        // استرجاع الوقت المخزن محليًا أو جلب وقت جديد
-        const storedTime = localStorage.getItem('lastUpdateTime');
-        if (storedTime) {
-            initialTime = new Date(parseInt(storedTime));
-            updateNumber();
-        } else {
-            updateNumber(true);
-        }
-
-        setInterval(updateNumber, 1000);
+        updateNumber();
+        setInterval(updateNumber, FIVE_MINUTES);
     </script>
 </body>
 </html>
