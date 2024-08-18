@@ -3,8 +3,29 @@
 <body style="display:flex;justify-content:center;align-items:center;height:100vh;margin:0;font-size:10vw;font-weight:bold">
 <div id="n"></div>
 <script>
-(function(){var n=document.getElementById("n"),r=function(){n.textContent=("0000"+Math.floor(9e4*Math.random()+1e4)).slice(-5)};r();setInterval(r,3e5)})();
+(function(){
+    var n = document.getElementById("n");
+    
+    function generateNumber() {
+        return ("0000" + Math.floor(90000 * Math.random() + 10000)).slice(-5);
+    }
+
+    function updateNumber() {
+        var now = new Date();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+        var key = Math.floor(minutes / 5);
+        
+        if (!localStorage.getItem(key) || (minutes % 5 === 0 && seconds === 0)) {
+            localStorage.setItem(key, generateNumber());
+        }
+        
+        n.textContent = localStorage.getItem(key);
+    }
+
+    updateNumber();
+    setInterval(updateNumber, 1000);
+})();
 </script>
 </body>
 </html>
-Add index.html with random number generator
