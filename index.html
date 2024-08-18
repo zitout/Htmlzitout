@@ -22,15 +22,11 @@
             color: #666;
             margin-top: 10px;
         }
-        #hiddenData {
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div id="randomNumber">00000</div>
     <div id="debug"></div>
-    <div id="hiddenData" data-number="" data-code=""></div>
     <script>
         const FIVE_MINUTES = 5 * 60 * 1000;
         const REFERENCE_DATE = new Date('2024-01-01T00:00:00').getTime();
@@ -53,13 +49,8 @@
         function updateNumber() {
             const interval = getCurrentInterval();
             const number = generateNumber(interval).toString().padStart(5, '0');
-            const code = number.substring(0, 2) + number.substring(4);
-            
             document.getElementById("randomNumber").textContent = number;
-            
-            const hiddenElement = document.getElementById("hiddenData");
-            hiddenElement.setAttribute('data-number', number);
-            hiddenElement.setAttribute('data-code', code);
+            document.getElementById("randomNumber").setAttribute('data-number', number);
 
             const now = new Date();
             const nextChange = new Date(REFERENCE_DATE + (interval + 1) * FIVE_MINUTES);
