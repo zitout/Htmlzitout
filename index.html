@@ -1,31 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>رقم موحد كل 5 دقائق</title>
+</head>
 <body style="display:flex;justify-content:center;align-items:center;height:100vh;margin:0;font-size:10vw;font-weight:bold">
-<div id="n"></div>
+<div id="randomNumber">جاري التحميل...</div>
 <script>
-(function(){
-    var n = document.getElementById("n");
-    
-    function generateNumber() {
-        return ("0000" + Math.floor(90000 * Math.random() + 10000)).slice(-5);
-    }
+let serverTimeOffset = 0;
+let lastSyncTime = 0;
 
-    function updateNumber() {
-        var now = new Date();
-        var minutes = now.getMinutes();
-        var seconds = now.getSeconds();
-        var key = Math.floor(minutes / 5);
-        
-        if (!localStorage.getItem(key) || (minutes % 5 === 0 && seconds === 0)) {
-            localStorage.setItem(key, generateNumber());
-        }
-        
-        n.textContent = localStorage.getItem(key);
-    }
+function getServerTime() {
+    return Date.now() + serverTimeOffset;
+}
 
-    updateNumber();
-    setInterval(updateNumber, 1000);
-})();
+function generateNumber(timestamp) {
+    const fiveMinuteInterval = Math.floor(timestamp / 300000);
+    const x = Math.sin(fiveMinuteInterval) * 10000;
+    return Math.floor((x - Math.floor(x)) * 90000) + 10000;
+}
+
+function updateNumber() {
+    const serverTime = getServerTime();
+    const number = generateNumber(serverTime);
+    document.getElementById("randomNumber").textContent = number.toString().padStart(5, '0');
+}
+
+function syncWithServer() {
+    const startTime = Date.now();
+    fetch('https://worldtimeapi.org/api/ip')
+        .then(response => response.json())
+        .then(data => {
+            const serverTimestamp = data.unixtime * 1000;
+            const localTimestamp = Date.now();
+            const latency = (localTimestamp - startTime) / 2;
+            serverTimeOffset = serverTimestamp - localTimestamp + latency;
+            lastSyncTime = localTimestamp;
+            updateNumber();
+        })
+        .catch(error => {
+            console.error('خطأ في مزامنة الوقت:', error);
+        })
+        .finally(() => {
+            updateNumber();
+            setInterval(updateNumber, 1000);
+            setInterval(syncWithServer, 3600000); // إعادة المزامنة كل ساعة
+        });
+}
+
+syncWithServer();
 </script>
 </body>
 </html>
