@@ -2,49 +2,31 @@
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>نظام الرقم العشوائي الموحد</title>
+    <title>رقم عشوائي موحد</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
-        }
-        #container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            text-align: center;
+            font-family: Arial, sans-serif;
         }
         #randomNumber {
-            font-size: 48px;
+            font-size: 10vw;
             font-weight: bold;
-            margin: 20px 0;
-        }
-        #code {
-            font-size: 24px;
-            color: #007bff;
-            margin-bottom: 20px;
         }
         #debug {
-            font-size: 14px;
+            font-size: 16px;
             color: #666;
-            margin-top: 20px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <h1>نظام الرقم العشوائي الموحد</h1>
-        <div id="randomNumber">00000</div>
-        <div id="code">الكود: 000</div>
-        <div id="debug"></div>
-    </div>
+    <div id="randomNumber">00000</div>
+    <div id="debug"></div>
     <script>
         const FIVE_MINUTES = 5 * 60 * 1000;
         const REFERENCE_DATE = new Date('2024-01-01T00:00:00').getTime();
@@ -67,12 +49,8 @@
         function updateNumber() {
             const interval = getCurrentInterval();
             const number = generateNumber(interval).toString().padStart(5, '0');
-            const code = number.substr(0, 2) + number.substr(4, 1);
-            
             document.getElementById("randomNumber").textContent = number;
             document.getElementById("randomNumber").setAttribute('data-number', number);
-            document.getElementById("code").textContent = `الكود: ${code}`;
-            document.getElementById("code").setAttribute('data-code', code);
 
             const now = new Date();
             const nextChange = new Date(REFERENCE_DATE + (interval + 1) * FIVE_MINUTES);
@@ -82,7 +60,7 @@
         }
 
         updateNumber();
-        setInterval(updateNumber, 1000); // تحديث كل ثانية
+        setInterval(updateNumber, 1000); // تحديث العرض كل ثانية
     </script>
 </body>
 </html>
