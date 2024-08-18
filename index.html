@@ -1,5 +1,3 @@
 <script>
-setInterval(function(){
-document.title=(1e4+(Math.floor((new Date-new Date('2024'))/3e5)*16807%9e4)+'').slice(-5)
-},3e5)
+(f=_=>document.title=(1e4+(((new Date-new Date('2024'))/3e5|0)*16807%9e4)+'').slice(-5))();setInterval(f,3e5)
 </script>
