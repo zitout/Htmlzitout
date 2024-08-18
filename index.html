@@ -1,36 +1,30 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>رقم عشوائي موحد</title>
+<meta charset="UTF-8">
+<script>
+const FIVE_MINUTES = 5 * 60 * 1000;
+const REFERENCE_DATE = new Date('2024-01-01T00:00:00').getTime();
+
+function generateNumber(seed) {
+    let state = seed % 2147483647;
+    if (state <= 0) state += 2147483646;
+    for (let i = 0; i < 10; i++) {
+        state = (state * 16807) % 2147483647;
+    }
+    return 10000 + (state % 90000);
+}
+
+function updateNumber() {
+    const interval = Math.floor((new Date().getTime() - REFERENCE_DATE) / FIVE_MINUTES);
+    const number = generateNumber(interval).toString().padStart(5, '0');
+    document.body.textContent = number;
+}
+
+setInterval(updateNumber, 1000);
+updateNumber();
+</script>
 </head>
 <body>
-<div id="randomNumber">00000</div>
-<script>
-    const FIVE_MINUTES = 5 * 60 * 1000;
-    const REFERENCE_DATE = new Date('2024-01-01T00:00:00').getTime();
-
-    function generateNumber(seed) {
-        let state = seed % 2147483647;
-        if (state <= 0) state += 2147483646;
-        for (let i = 0; i < 10; i++) {
-            state = (state * 16807) % 2147483647;
-        }
-        return 10000 + (state % 90000);
-    }
-
-    function getCurrentInterval() {
-        return Math.floor((new Date().getTime() - REFERENCE_DATE) / FIVE_MINUTES);
-    }
-
-    function updateNumber() {
-        const interval = getCurrentInterval();
-        const number = generateNumber(interval).toString().padStart(5, '0');
-        document.getElementById("randomNumber").textContent = number;
-    }
-
-    updateNumber();
-    setInterval(updateNumber, 1000); // تحديث كل ثانية للتأكد من التغيير الفوري
-</script>
 </body>
 </html>
