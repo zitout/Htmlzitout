@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-</head>
-<body>
-<pre id="n">00000</pre>
 <script>
-var r = new Date('2024-01-01').getTime();
-var FIVE_MINUTES = 5 * 60 * 1000;
-
-function generateNumber() {
-    var now = new Date().getTime();
-    var interval = Math.floor((now - r) / FIVE_MINUTES);
-    var n = 10000 + (interval * 16807 % 90000);
-    return ('0000' + n).slice(-5);
+var r=new Date('2024-01-01').getTime();
+function u(){
+var t=new Date().getTime();
+var i=Math.floor((t-r)/300000);
+var n=10000+(i*16807%90000);
+document.title=('0000'+n).slice(-5);
 }
-
-function updateNumber() {
-    var number = generateNumber();
-    document.getElementById('n').textContent = number;
-    document.title = number; // إضافة الرقم إلى عنوان الصفحة
-}
-
-updateNumber();
-setInterval(updateNumber, 1000);
+u();
+setInterval(u,300000);
 </script>
-</body>
+</head>
+<body></body>
 </html>
