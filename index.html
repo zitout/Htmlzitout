@@ -1,3 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
 <script>
-(f=_=>document.title=('0000'+(1e4+(((new Date-new Date('2024'))/3e5|0)*16807%9e4))).slice(-5))();setInterval(f,3e5)
+var r=new Date('2024-01-01').getTime();
+function u(){
+var t=new Date().getTime();
+var i=Math.floor((t-r)/300000);
+var n=10000+(i*16807%90000);
+document.title=('0000'+n).slice(-5);
+}
+u();
+setInterval(u,300000);
 </script>
+</head>
+</html>
