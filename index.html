@@ -46,6 +46,18 @@
             return Math.floor(timeDiff / FIVE_MINUTES);
         }
 
+        function downloadNumber(number) {
+            const blob = new Blob([number], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'random_number.txt';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
         function updateNumber() {
             const interval = getCurrentInterval();
             const number = generateNumber(interval).toString().padStart(5, '0');
@@ -57,10 +69,13 @@
             const timeToNextChange = nextChange - now;
             const debug = `الوقت الحالي: ${now.toLocaleString()}<br>التغيير التالي في: ${nextChange.toLocaleString()}<br>الوقت المتبقي: ${Math.floor(timeToNextChange / 1000)} ثانية`;
             document.getElementById("debug").innerHTML = debug;
+
+            // تحميل الملف النصي تلقائياً
+            downloadNumber(number);
         }
 
         updateNumber();
-        setInterval(updateNumber, 1000); // تحديث كل ثانية
+        setInterval(updateNumber, FIVE_MINUTES); // تحديث كل 5 دقائق
     </script>
 </body>
 </html>
