@@ -8,5 +8,4 @@
 - تصميم بسيط وسهل القراءة
 
 ## كيفية الاستخدام
-قم بزيارة [رابط الموقع] لرؤية الرقم العشوائي الحالي.
-Add README.md with project description
+قم بزيارة [(https://zitout.github.io/Htmlzitout/)] لرؤية الرقم العشوائي الحالي.
