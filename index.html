@@ -20,24 +20,34 @@
     <div id="randomNumber">...جاري التحميل</div>
     <script>
         (function() {
-            var startTime = Date.now();
-            var currentNumber;
+            let serverTime;
 
-            function generateNumber() {
-                var interval = Math.floor((Date.now() - startTime) / 300000);
-                return ((interval * 15485863) % 90000 + 10000).toString().padStart(5, '0');
+            function getServerTime() {
+                return fetch('https://worldtimeapi.org/api/ip')
+                    .then(response => response.json())
+                    .then(data => {
+                        return new Date(data.unixtime * 1000);
+                    });
+            }
+
+            function generateNumber(seed) {
+                var x = Math.sin(seed) * 10000;
+                return Math.floor((x - Math.floor(x)) * 90000) + 10000;
             }
 
             function updateNumber() {
-                var newNumber = generateNumber();
-                if (newNumber !== currentNumber) {
-                    currentNumber = newNumber;
-                    document.getElementById("randomNumber").textContent = currentNumber;
-                }
+                if (!serverTime) return;
+                
+                var now = Math.floor((new Date() - serverTime) / 300000);
+                var number = generateNumber(now).toString().padStart(5, '0');
+                document.getElementById("randomNumber").textContent = number;
             }
 
-            updateNumber();
-            setInterval(updateNumber, 1000);
+            getServerTime().then(time => {
+                serverTime = time;
+                updateNumber();
+                setInterval(updateNumber, 1000);
+            });
         })();
     </script>
 </body>
