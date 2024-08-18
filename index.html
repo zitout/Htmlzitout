@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-    <div id="randomNumber">...جاري التحميل</div>
+    <div id="randomNumber">00000</div>
     <div id="debug"></div>
     <script>
         const FIVE_MINUTES = 5 * 60 * 1000;
@@ -50,6 +50,7 @@
             const interval = getCurrentInterval();
             const number = generateNumber(interval).toString().padStart(5, '0');
             document.getElementById("randomNumber").textContent = number;
+            document.getElementById("randomNumber").setAttribute('data-number', number);
 
             const now = new Date();
             const nextChange = new Date(REFERENCE_DATE + (interval + 1) * FIVE_MINUTES);
@@ -58,20 +59,7 @@
             document.getElementById("debug").innerHTML = debug;
         }
 
-        function scheduleNextUpdate() {
-            const now = new Date();
-            const nextInterval = getCurrentInterval() + 1;
-            const nextUpdate = new Date(REFERENCE_DATE + nextInterval * FIVE_MINUTES);
-            const timeToNextUpdate = nextUpdate - now;
-
-            setTimeout(() => {
-                updateNumber();
-                scheduleNextUpdate();
-            }, timeToNextUpdate);
-        }
-
         updateNumber();
-        scheduleNextUpdate();
         setInterval(updateNumber, 1000); // تحديث العرض كل ثانية
     </script>
 </body>
