@@ -4,29 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>رمز الأمان</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #securityCode {
+            font-size: 72px;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
     <script>
-        const startDate = new Date('2024-01-01').getTime();
-        
         function generateSecurityCode() {
-            const currentTime = new Date().getTime();
-            const timeDiff = Math.floor((currentTime - startDate) / 300000);
-            const securityNumber = 10000 + (timeDiff * 16807 % 90000);
-            const formattedNumber = ('0000' + securityNumber).slice(-5);
-            
-            document.title = formattedNumber;
-            document.getElementById('securityCode').textContent = formattedNumber;
+            var startDate = new Date('2024-01-01').getTime();
+            var currentTime = new Date().getTime();
+            var timeDiff = Math.floor((currentTime - startDate) / 600000);
+            var securityNumber = 10000 + (timeDiff * 16807 % 90000);
+            return ('0000' + securityNumber).slice(-5);
         }
 
-        function init() {
-            generateSecurityCode();
-            setInterval(generateSecurityCode, 300000); // تحديث كل 5 دقائق
-        }
-
-        window.onload = init;
+        document.title = generateSecurityCode();
     </script>
 </head>
 <body>
     <h1>رمز الأمان الحالي:</h1>
-    <p id="securityCode" style="font-size: 24px; font-weight: bold;"></p>
+    <p id="securityCode"></p>
+
+    <script>
+        document.getElementById('securityCode').textContent = document.title;
+        setInterval(function() {
+            var code = generateSecurityCode();
+            document.title = code;
+            document.getElementById('securityCode').textContent = code;
+        }, 600000);
+    </script>
 </body>
 </html>
